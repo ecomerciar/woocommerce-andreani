@@ -13,7 +13,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Suma envios a traves de Andreani a tu pagina de WooCommerce a traves de la API de Andreani.
 
-== Installation ==
+== Instalation ==
 
 1. Subi los plugins a la carpeta `/wp-content/plugins/woocommerce-andreani`, o instala el plugin a traves de WordPress plugins directamente.
 2. Active el plugin a traves de la pantalla de 'Plugins' en WordPress
@@ -30,7 +30,7 @@ Podes registrarte a traves de este link: [Andreani Developers](https://developer
 
 En la configuracion del plugin hay un link donde podes hacer click y buscar a traves de tu codigo postal tu sucursal de origen mas cercana.
 
-== Upgrade Notice ==
+== Noticias de Actualizacion ==
 
 = 1.0 =
 Primera salida.
