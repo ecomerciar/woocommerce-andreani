@@ -18,9 +18,9 @@ function wc_andreani_generar_envio_andreani( $order_id ){
 	$envio = explode(" ", $envio_seleccionado);
 	if($envio[0] === 'andreani'){
 		$datos = get_option($envio[3]);		
-		require_once trailingslashit( ABSPATH ) . 'wp-content/plugins/woocommerce-andreani/vendor/autoload.php';
+		require_once plugin_dir_path( __FILE__ ). 'vendor/autoload.php';
 		$andreani = new Andreani($datos['username'],$datos['password'],$datos['ambiente']);		
-		$request = cargar_datos($order, $datos, $envio);
+		$request = wc_andreani_cargar_datos($order, $datos, $envio);
 		$response = $andreani->call($request);		
 		if($datos['debug'] === 'yes'){
 			$log = new WC_Logger();		
@@ -34,7 +34,7 @@ function wc_andreani_generar_envio_andreani( $order_id ){
 		}	
 	}
 }
-add_action( 'woocommerce_order_status_completed', 'generar_envio_andreani');
+add_action( 'woocommerce_order_status_completed', 'wc_andreani_generar_envio_andreani');
 
 
 // =========================================================================

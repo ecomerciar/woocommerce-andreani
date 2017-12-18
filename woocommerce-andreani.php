@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: Woocommerce Andreani
-Plugin URI: http://ecomerciar.com/woocommerce-andreani
+Plugin URI: http://ecomerciar.com
 Description: Integración de andreani para realizar envíos a través de la plataforma WooCommerce.
-Version: 1.0
+Version: 1.1
 Author: Ecomerciar
 Author URI: http://ecomerciar.com
 License: GPL2

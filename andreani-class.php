@@ -232,7 +232,9 @@ function envios_andreani_init() {
 					$log->add('andreani','Accion: '.$accion);
 				}
 				
-				
+				add_action( 'woocommerce_after_checkout_billing_form', 'wc_andreani_checkout_field_andreani' );	
+				add_action('woocommerce_checkout_process', 'wc_andreani_checkout_field_process_andreani');
+				add_action( 'woocommerce_checkout_update_order_meta', 'wc_andreani_checkout_field_update_order_meta_andreani' );			
 
 				if($accion === 'envio_gratis' || $envio_gratis === 'yes'){
 					

@@ -19,27 +19,26 @@ add_filter( 'woocommerce_shipping_methods', 'wc_andreani_agregar_envio_andreani'
  * Add DNI field
  *
  */
-add_action( 'woocommerce_after_checkout_billing_form', 'wc_andreani_checkout_field_andreani' );
 function wc_andreani_checkout_field_andreani( $checkout ) {
-		woocommerce_form_field( 'dni_andreani', array(
-			'type'          => 'text',
-			'class'         => array('form-row-first'),
-			'label'         => __('DNI'),
-			'required'      => true,			
-			), $checkout->get_value( 'dni_andreani' ));
+
+	woocommerce_form_field( 'dni_andreani', array(
+		'type'          => 'text',
+		'class'         => array('form-row-first'),
+		'label'         => __('DNI'),
+		'required'      => true,			
+		), $checkout->get_value( 'dni_andreani' ));
 }
 
-add_action('woocommerce_checkout_process', 'wc_andreani_checkout_field_process_andreani');
 function wc_andreani_checkout_field_process_andreani() {
     // Check if set, if its not set add an error.
     if ( ! $_POST['dni_andreani'] )
         wc_add_notice( __( 'El campo <strong>DNI</strong> es obligatorio' ), 'error' );
 }
 
-add_action( 'woocommerce_checkout_update_order_meta', 'wc_andreani_checkout_field_update_order_meta_andreani' );
 function wc_andreani_checkout_field_update_order_meta_andreani( $order_id ) {
     if ( ! empty( $_POST['dni_andreani'] ) ) {
-        update_post_meta( $order_id, 'dni_andreani', sanitize_text_field( $_POST['dni_andreani'] ) );
+		$data = filter_var ( $_POST['dni_andreani'], FILTER_SANITIZE_NUMBER_INT);	
+        update_post_meta( $order_id, 'dni_andreani', sanitize_text_field( $data ) );
     }
 }
 
@@ -75,9 +74,10 @@ function wc_andreani_andreani_leer_sucursales(){
 	if ( ! isset( $session ) ) {
 		wp_die();
 	}
+	$data = filter_var ( $_REQUEST['data'], FILTER_SANITIZE_STRING);
 	$log = new WC_Logger();
-	$log->add('andreani','Data recibida y a colocar en la sesion: '.$_REQUEST['data']);
-	$session->set('cp_sucursal_andreani', $_REQUEST['data']);
+	$log->add('andreani','Data recibida y a colocar en la sesion: '.$data);
+	$session->set('cp_sucursal_andreani', $data);
 }
 
 
@@ -309,8 +309,9 @@ function wc_andreani_tracking_andreani_func( $atts, $content= NULL) {
 		require_once trailingslashit( ABSPATH ) . 'wp-content/plugins/woocommerce-andreani/vendor/autoload.php';		
 		$andreani = new Andreani('STAGING_WS','andreani','test');	
 		$request = new ObtenerEstadoDistribucionCodificado();
-		$request->setCodigoDeCliente('CL0003750');			
-		$request->setNumeroDeEnvio($_POST['id']);			
+		$request->setCodigoDeCliente('CL0003750');	
+		$nenvio= filter_var ( $_POST['id'], FILTER_SANITIZE_STRING);			
+		$request->setNumeroDeEnvio($nenvio);			
 		$response = $andreani->call($request);
 		ob_start();		
 		if($response->isValid() && $response->getMessage()->Respuestas->EnviosExitosos->EnvioExitoso->Estado !== ''){
@@ -337,5 +338,20 @@ function wc_andreani_tracking_andreani_func( $atts, $content= NULL) {
 			echo "<h2>Error interno</h2>";
 		}
 		return ob_get_clean();		
+	}
+}
+
+
+// =========================================================================
+/**
+ * Function wc_andreani_clear_shipping_rates_cache
+ *
+ */
+add_filter('woocommerce_checkout_update_order_review', 'wc_andreani_clear_shipping_rates_cache');
+function wc_andreani_clear_shipping_rates_cache(){
+	$packages = WC()->cart->get_shipping_packages();
+	foreach ($packages as $key => $value) {
+		$shipping_session = "shipping_for_package_$key";
+		unset(WC()->session->$shipping_session);
 	}
 }
