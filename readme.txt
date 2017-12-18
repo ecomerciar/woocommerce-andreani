@@ -45,6 +45,9 @@ Primera salida.
 
 == Changelog ==
 
+= 1.1 =
+* Fixed bugs in form checkout
+
 = 1.0 =
 * Primera subida
 
